@@ -33,10 +33,10 @@ document.querySelector("#increment").addEventListener('click', ()=>{  //html 컴
     socket.emit('increment')  //client -> server
 })
 
-socket.on('locationMessage', (url) =>{
-    console.log(url)
+socket.on('locationMessage', (message) =>{
     const html = Mustache.render($locationMessageTemplate, {
-        url
+        url : message.ur,
+        createdAt : moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML("beforeend",html)
 })

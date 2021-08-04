@@ -6,7 +6,7 @@ const app = express()
 const server  = http.createServer(app)
 const socketio = require('socket.io')
 const io = socketio(server)  //파라미터로 서버가 들어가야함 (그래서 http.createServer 해준 것)
-const {generateMessage} = require('./utils/messages')
+const {generateMessage, generateLocation} = require('./utils/messages')
 
 const port = process.env.PORT || 3000
 
@@ -46,7 +46,8 @@ io.on('connection',(socket)=>{   //소켓 이벤트리스너, 콜백
     })
 
     socket.on('sendLocation', (coords, callback)=>{
-        io.emit('locationMessage', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)  //전달할 떄 구글 맵 url에다가 위,경도 띄워서 전달해주기 (링크타고 구글 맵 이동할 수 있음)
+        //io.emit('locationMessage', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)  //전달할 떄 구글 맵 url에다가 위,경도 띄워서 전달해주기 (링크타고 구글 맵 이동할 수 있음)
+        io.emit('locationMessage', generateLocation(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))  //전달할 떄 구글 맵 url에다가 위,경도 띄워서 전달해주기 (링크타고 구글 맵 이동할 수 있음)
         callback("well delivered") //ack 전송
     })
 })
