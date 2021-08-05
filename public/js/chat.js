@@ -10,20 +10,20 @@ const $messageForm = document.querySelector("#mess")
 const $messageFormInput = document.querySelector("input")
 const $messageFormButton = document.querySelector("button")
 const $setlocationButton = document.querySelector("#send-location")
-const $locationMessageTemplate = document.querySelector("#location-maeeage-template")
+const $locationMessageTemplate = document.querySelector("#location-message-template")
 
 
 const $messages = document.querySelector('#messages')
-
+const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 const messageTemplate = document.querySelector("#message-template").innerHTML
 
 socket.on('message',(Message)=>{
     console.log(Message)
     const html = Mustache.render(messageTemplate, {
-        message: message.text,
-        createAt : moment(message.createdAt).format("h:mm a") //(momontjs 라이브러리가 제공하는 시간 포맷 지정)
+        message: Message.text,
+        createAt : moment(Message.createdAt).format("h:mm a") //(momontjs 라이브러리가 제공하는 시간 포맷 지정)
     })  //2nd param : html에서 끌어다 쓸 값들 {{}} 로 씀
-    console.log("asdsa" + message)
+    console.log("asdsa는" + Message.text)
     $messages.insertAdjacentHTML('beforeend', html)
 })
 
@@ -34,8 +34,8 @@ document.querySelector("#increment").addEventListener('click', ()=>{  //html 컴
 })
 
 socket.on('locationMessage', (message) =>{
-    const html = Mustache.render($locationMessageTemplate, {
-        url : message.ur,
+    const html = Mustache.render(locationMessageTemplate, {
+        url : message.url,
         createdAt : moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML("beforeend",html)
@@ -45,8 +45,8 @@ $messageForm.addEventListener('submit', (e)=>{  //html 컴포넌트에 대해 �
     e.preventDefault() //submit은 누르면 페이지가 리프레쉬되는데 이 기능을 막고자
     
     $messageFormButton.setAttribute("disabled", "disabled") //submit 누른 순간 버튼 비활성화
-     
     const message = e.target.elements.message.value   //e.target.elements.message : 이벤트리스너가 감지하는 것 (form_) + elements.'name' => form 중에 name 속성이 'name' 것을 참조 (input 태그를 queryselector로 안 하는 것이 좋을 때)
+    console.log("hello world" + message) 
     socket.emit("send", message, (error)=>{   //3param : acknowledge가 수신측으로 부터 들어왔을 때 핸들러
         
         //ack를 받으면, 버튼 활성화, 인풋에 들어있던 값 지워지고 커서가 들어감

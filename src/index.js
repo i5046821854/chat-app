@@ -37,7 +37,7 @@ io.on('connection',(socket)=>{   //소켓 이벤트리스너, 콜백
             return callback("profanity not allowed")  //욕설이 들어오면 callback function
         }
         
-        io.emit("message", msg) //모든 클라이언트로 던짐 (msg가 다른 클라이언트에게도 전달됨)
+        io.emit("message", generateMessage(msg)) //모든 클라이언트로 던짐 (msg가 다른 클라이언트에게도 전달됨)
         callback()  //송신 측에 acknowledge 전달
     })
 
