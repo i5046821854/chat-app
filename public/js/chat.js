@@ -6,7 +6,7 @@ const socket = io() //얘가 받음
 
 
 //입력 시 버튼, 폼들을 변환시키기 위한 변수들
-const $messageForm = document.querySelector("#mess")
+const $messageForm = document.querySelector("#message-form")
 const $messageFormInput = document.querySelector("input")
 const $messageFormButton = document.querySelector("button")
 const $setlocationButton = document.querySelector("#send-location")
@@ -23,20 +23,19 @@ socket.on('message',(Message)=>{
         message: Message.text,
         createAt : moment(Message.createdAt).format("h:mm a") //(momontjs 라이브러리가 제공하는 시간 포맷 지정)
     })  //2nd param : html에서 끌어다 쓸 값들 {{}} 로 씀
-    console.log("asdsa는" + Message.text)
     $messages.insertAdjacentHTML('beforeend', html)
 })
 
-document.querySelector("#increment").addEventListener('click', ()=>{  //html 컴포넌트에 대해 이벤트 리스너 정의 
-    console.log("clicked")
+// document.querySelector("#increment").addEventListener('click', ()=>{  //html 컴포넌트에 대해 이벤트 리스너 정의 
+//     console.log("clicked")
     
-    socket.emit('increment')  //client -> server
-})
+//     socket.emit('increment')  //client -> server
+// })
 
 socket.on('locationMessage', (message) =>{
     const html = Mustache.render(locationMessageTemplate, {
         url : message.url,
-        createdAt : moment(message.createdAt).format('h:mm a')
+        createAt : moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML("beforeend",html)
 })
