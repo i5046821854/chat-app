@@ -19,7 +19,7 @@ let count = 0
 io.on('connection',(socket)=>{   //소켓 이벤트리스너, 콜백
     console.log("new websocket connected")
     
-    socket.emit("message", generateMessage("welcome")) //utils의 index.js에 전달됨
+    //socket.emit("message", generateMessage("welcome")) //utils의 index.js에 전달됨
     // socket.emit('countUpdated', count)  //서버에서 클라이언트로 전송, 2nd param으로 전해주는 데이터는 클라이언트 사이드에서 콜백으로 접근 가능
     
     // socket.on('increment', ()=>{  //클라이언트에서 들어오는 정보를 받음
@@ -28,7 +28,7 @@ io.on('connection',(socket)=>{   //소켓 이벤트리스너, 콜백
     //     io.emit("countUpdated", count) //얘는 모든 클라이언트로 던짐 (count가 다른 클라이언트에게도 전달됨)
     // })
 
-    socket.broadcast.emit("message", "new member join") //타겟 클라이언트를 제외한 모든 클라이언트로 던짐
+    //socket.broadcast.emit("message", "new member join") //타겟 클라이언트를 제외한 모든 클라이언트로 던짐
 
     socket.on('send', (msg, callback)=>{ //클라이언트에서 들어오는 정보를 받음
         const filter = new Filter()
@@ -41,6 +41,12 @@ io.on('connection',(socket)=>{   //소켓 이벤트리스너, 콜백
         callback()  //송신 측에 acknowledge 전달
     })
 
+    socket.on('join', ({username, room})=>{
+        socket.join(room)  //룸에 join할 수 있는 socketio의 메소드
+        //io.to.emit : 그룹에 있는 모든이들에게 전달 / socket.broadcate.to.emit: 그룹에 있는 모든 이 (자신 빼고) 전달
+        socket.emit("message", generateMessage("welcome")) 
+        socket.broadcast.to(room).emit("message", generateMessage(`${username} has joined`))
+    })
     socket.on('disconnect', ()=>{   //disconnect 시에는 io.on이 아니라 socket.on으로 처리
         io.emit("message", "user has left")  //disconnect에는 io로 줘도 타겟 클라이언트 제외한 모든 클라이언트로 다 전달됨 (걔는 나갔으니까)
     })

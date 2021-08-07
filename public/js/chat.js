@@ -17,6 +17,10 @@ const $messages = document.querySelector('#messages')
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 const messageTemplate = document.querySelector("#message-template").innerHTML
 
+//options
+const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix : true //쿼리스트링의 '?' 삭제
+})   //location.search : 쿼리스트링을 반환
+
 socket.on('message',(Message)=>{
     console.log(Message)
     const html = Mustache.render(messageTemplate, {
@@ -81,3 +85,5 @@ $setlocationButton.addEventListener('click', ()=>{
         })
     })
 })
+
+socket.emit('join', {username, room}) //join은 너의 유저네임과 방 이름을 받아들임  //167강
