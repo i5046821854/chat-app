@@ -1,4 +1,4 @@
-const generateMessage = (username, text)=>{
+const generateMessage = (username, text)=>{   //메시지 생성 로직
     return {
         username,
         text, 
@@ -6,7 +6,7 @@ const generateMessage = (username, text)=>{
     }
 }
 
-const generateLocation = (username, url)=>{
+const generateLocation = (username, url)=>{  //위치 메시지 생성 로직
     return{
         username,
         url,
